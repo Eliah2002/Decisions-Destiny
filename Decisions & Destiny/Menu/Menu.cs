@@ -1,0 +1,80 @@
+﻿public class Menu
+{
+	public List<MenuItem> MenuItems { get; set; }
+	private bool IsRunning { get; set; }
+
+	public Menu(List<MenuItem> menuItems)
+	{
+		MenuItems = menuItems;
+	}
+
+	public MenuItem Run()
+	{
+		IsRunning = true;
+		while (true)
+		{
+			DrawMenu();
+			var menuItem = MenuAction(Console.ReadKey());
+			if (menuItem != null)
+			{
+				return menuItem;
+			}
+		}
+	}
+
+	private void DrawMenu()
+	{
+		Console.Clear();
+		for (int i = 0; i < MenuItems.Count; i++)
+		{
+			if (MenuItems[i].Selected)
+			{
+				Console.ForegroundColor = ConsoleColor.Blue;
+				Console.WriteLine($">{i + 1}. {MenuItems[i].Title}");
+			}
+			else
+			{
+				if(i == MenuItems.Count - 1) //Letztes Item ist Exit 
+				{
+					Console.ForegroundColor = ConsoleColor.DarkRed;
+				}
+				Console.WriteLine($"{i + 1}. {MenuItems[i].Title}");
+			}
+			Console.ResetColor();
+		}
+	}
+
+	private MenuItem MenuAction(ConsoleKeyInfo consoleKeyInfo)
+	{
+		int index;
+		MenuItem menuItem;
+
+		switch (consoleKeyInfo.Key)
+		{
+			case ConsoleKey.Tab:
+			case ConsoleKey.DownArrow:
+			case ConsoleKey.S:
+				index = MenuItems.FindIndex(i => i.Selected);
+				menuItem = MenuItems[index];
+				menuItem.Selected = false;
+				menuItem = MenuItems[(index + 1) % MenuItems.Count];
+				menuItem.Selected = true;
+				return null;
+
+			case ConsoleKey.Enter:
+			case ConsoleKey.Spacebar:
+				return MenuItems.First(i => i.Selected);
+
+			case ConsoleKey.UpArrow:
+			case ConsoleKey.W:
+				index = MenuItems.FindIndex(i => i.Selected);
+				menuItem = MenuItems[index];
+				menuItem.Selected = false;
+				menuItem = MenuItems[(index + MenuItems.Count - 1) % MenuItems.Count];
+				menuItem.Selected = true;
+				return null;
+			default:
+				return null;
+		}
+	}
+}

@@ -1,0 +1,45 @@
+{
+  "start": {
+    "text": "Du stehst vor einer dunklen Höhle. Was tust du?",
+    "choices": [
+      {
+        "text": "Geh hinein",
+        "target": "inside"
+      },
+      {
+        "text": "Zurück ins Dorf",
+        "target": "village"
+      }
+    ]
+  },
+  "inside": {
+    "text": "Es ist dunkel. Du hörst ein Geräusch.",
+    "choices": [
+      {
+        "text": "Nach links gehen",
+        "target": "left_corridor"
+      },
+      {
+        "text": "Nach rechts gehen",
+        "target": "right_corridor"
+      },
+      {
+        "text": "Zurück zum Eingang",
+        "target": "start"
+      }
+    ]
+  },
+  "village": {
+    "text": "Du bist zurück im Dorf. Die Leute fragen, was passiert ist.",
+    "choices": [
+      {
+        "text": "Die Wahrheit erzählen",
+        "target": "truth_ending"
+      },
+      {
+        "text": "Lügen",
+        "target": "lie_ending"
+      }
+    ]
+  }
+}
