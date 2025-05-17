@@ -1,10 +1,10 @@
 ﻿namespace Decisions___Destiny.Models
 {
-	internal class Choice
+	public class Choice
 	{
-		public string? Text { get; set; }
-		public string? Target { get; set; }
-		public string? Condition { get; set; }
-		public string? Effect { get; set; }
+		public string Text { get; set; } = String.Empty;
+		public string NextSceneId { get; set; } = String.Empty;
+		public List<string> RequiredFlags { get; set; } = new();
+		public List<string> SetFlags { get; set; } = new();
 	}
 }

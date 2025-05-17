@@ -1,45 +1,33 @@
-{
-  "start": {
-    "text": "Du stehst vor einer dunklen Höhle. Was tust du?",
-    "choices": [
+[
+  {
+    "Id": "höhlen_eingang",
+    "Text": "Du stehst vor einer dunklen Höhle. Was tust du?",
+    "Choices": [
       {
-        "text": "Geh hinein",
-        "target": "inside"
+        "Text": "Geh hinein",
+        "NextSceneID": "innerhalb_höhle",
+        "RequiredFlags": [ "hat_taschenlampe" ],
+        "SetFlags": [ "findet_schlüssel" ]
       },
       {
-        "text": "Zurück ins Dorf",
-        "target": "village"
+        "Text": "Zurück ins Dorf",
+        "NextSceneID": "stadtmitte"
       }
     ]
   },
-  "inside": {
-    "text": "Es ist dunkel. Du hörst ein Geräusch.",
-    "choices": [
+  {
+    "Id": "innerhalb_höhle",
+    "Text": "Du findest einen Schlüssel. Willst du tiefer in die Höhle?",
+    "Choices": [
       {
-        "text": "Nach links gehen",
-        "target": "left_corridor"
+        "Text": "Weiter die Höhle erkunden",
+        "NextSceneID": "tod",
+        "RequiredFlags": [ "findet_schlüssel" ]
       },
       {
-        "text": "Nach rechts gehen",
-        "target": "right_corridor"
-      },
-      {
-        "text": "Zurück zum Eingang",
-        "target": "start"
-      }
-    ]
-  },
-  "village": {
-    "text": "Du bist zurück im Dorf. Die Leute fragen, was passiert ist.",
-    "choices": [
-      {
-        "text": "Die Wahrheit erzählen",
-        "target": "truth_ending"
-      },
-      {
-        "text": "Lügen",
-        "target": "lie_ending"
+        "Text": "Zurück ins Dorf",
+        "NextSceneID": "stadtmitte"
       }
     ]
   }
-}
+]

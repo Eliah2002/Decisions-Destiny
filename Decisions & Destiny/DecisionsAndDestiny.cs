@@ -18,15 +18,24 @@ namespace Decisions___Destiny
 			set { singleton = value; }
 		}
 
-		// drei Ordner hoch da während Laufzeit in bin\Debug\net7.0
+		// three folders up because during runtime in bin\Debug\net7.0
 		private readonly string baseJSONPath = Path.Combine(
 			Directory.GetParent(AppContext.BaseDirectory)!.Parent!.Parent!.Parent!.FullName,
 			"JSON"
 		);
 
+        internal string SelectedGamePath
+        {
+            get
+            {
+				return Path.Combine(baseJSONPath, SelectedGameName);
+
+            }
+        }
+
 		private bool ProgramIsRunning { get; set; }
-		private string SelectedGameName { get; set; } = String.Empty;
-		public Menu? MainMenu { get; set; }
+		internal string SelectedGameName { get; set; } = String.Empty;
+        public Menu? MainMenu { get; set; }
 
 		public void Start()
 		{
@@ -45,15 +54,14 @@ namespace Decisions___Destiny
 				Console.Clear();
 				MainMenu = new Menu(new List<MenuItem>()
 				{
-					new MenuItem(true, "Start new Game", () => ShowGameSelection(StartNewGame)),
-					new MenuItem(false, "Load Game", () => ShowGameSelection(StartLoadedGame)),
-					new MenuItem(false, "Exit", () => ProgramIsRunning = false)
+					new MenuItem(true, "Neues Spiel starten", () => ShowGameSelection(StartNewGame)),
+					new MenuItem(false, "Lade Spiel", () => ShowGameSelection(StartLoadedGame)),
+					new MenuItem(false, "Abbrechen", () => ProgramIsRunning = false)
 				});
 
 				var selected = MainMenu.Run();
 				selected.Action();
 			}
-
 		}
 
 		private void ShowGameSelection(Action onGameSelected)
@@ -113,7 +121,7 @@ namespace Decisions___Destiny
 
 		private void StartNewGame()
 		{
-			var game = new Game(SelectedGameName);
+			var game = new Game();
 		}
 
 		private void StartLoadedGame()
@@ -156,6 +164,7 @@ namespace Decisions___Destiny
 		private void StartLoadedGame(string scoreName)
 		{
 			var game = new Game(scoreName);
+			//TODO
 		}
 	}
 }

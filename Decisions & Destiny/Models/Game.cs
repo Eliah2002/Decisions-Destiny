@@ -1,12 +1,17 @@
 ﻿namespace Decisions___Destiny.Models
 {
-	internal class Game
+	public class Game
 	{
-		public Game(string gameName)
+		public Dictionary<string, Scene> Scenes { get; set; }
+		public HashSet<string> Flags { get; set; }
+		public string CurrentSceneID { get; set; }
+
+        public Game()
 		{
-			GameName = gameName;
+
 			Console.Clear();
 		}
-		string GameName { get; set; }
+
+
 	}
 }
