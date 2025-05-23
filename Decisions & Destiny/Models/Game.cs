@@ -13,7 +13,7 @@ namespace Decisions___Destiny.Models
 			Console.Clear();
 			string jsonContent = File.ReadAllText(jsonPath);
 
-			var sceneList = JsonSerializer.Deserialize<List<Scene>>(jsonContent);
+			List<Scene>? sceneList = JsonSerializer.Deserialize<List<Scene>>(jsonContent);
 			Scenes = sceneList.ToDictionary(s => s.ID, s => s);
 			CurrentSceneID = sceneList.First().ID;
 

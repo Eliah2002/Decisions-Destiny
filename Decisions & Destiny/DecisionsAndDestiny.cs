@@ -24,17 +24,11 @@ namespace Decisions___Destiny
 			"JSON"
 		);
 
-		internal string SelectedGameFolderPath
-		{
-			get
-			{
-				return Path.Combine(baseJSONPath, SelectedGameName);
-			}
-		}
-
-		private bool ProgramIsRunning { get; set; }
 		internal string SelectedGameName { get; set; } = String.Empty;
-		public Menu? MainMenu { get; set; }
+		internal string SelectedGameFolderPath => Path.Combine(baseJSONPath, SelectedGameName);
+
+		private bool programIsRunning;
+		public Menu? MainMenu { get; private set; }
 
 		public void Start()
 		{
@@ -46,124 +40,126 @@ namespace Decisions___Destiny
 				return;
 			}
 
-			ProgramIsRunning = true;
+			programIsRunning = true;
 
-			while (ProgramIsRunning)
+			while (programIsRunning)
 			{
 				Console.Clear();
 				MainMenu = new Menu(new List<MenuItem>()
 				{
 					new MenuItem(true, "Neues Spiel starten", () => ShowGameSelection(StartNewGame)),
 					new MenuItem(false, "Lade Spiel", () => ShowGameSelection(StartLoadedGame)),
-					new MenuItem(false, "Abbrechen", () => ProgramIsRunning = false)
+					new MenuItem(false, "Beenden", () => programIsRunning = false)
 				});
 
 				var selected = MainMenu.Run();
-				selected.Action();
+				selected.Action?.Invoke();
 			}
 		}
 
 		private void ShowGameSelection(Action onGameSelected)
 		{
-			var games = GetGames();
+			var games = GetDirectories(baseJSONPath);
 
 			if (games.Count == 0)
 			{
-				Console.ForegroundColor = ConsoleColor.Red;
-				Console.WriteLine("Keine Spiele gefunden!");
-				Console.ResetColor();
-				Console.ReadKey();
+				PrintError("Keine Spiele gefunden!");
 				return;
 			}
 
-			bool inSelection = true;
-			while (inSelection)
-			{
-				Console.Clear();
-
-				List<MenuItem> items = games
-					.Select((name, index) =>
-						new MenuItem(index == 0, name, () =>
-						{
-							SelectedGameName = name;
-							onGameSelected();
-							inSelection = false;
-						}))
-					.ToList();
-
-				items.Add(new MenuItem(false, "Zurück", () => inSelection = false));
-
-				MainMenu = new Menu(items);
-				var selected = MainMenu.Run();
-				selected.Action();
-			}
-		}
-
-		private List<string?> GetGames()
-		{
-			if (!Directory.Exists(baseJSONPath))
-			{
-				return new List<string?>();
-			}
-			return Directory.GetDirectories(baseJSONPath).Select(Path.GetFileName).Where(name => name != null).ToList()!;
-		}
-
-		private List<string> GetScores()
-		{
-			var gamePath = Path.Combine(baseJSONPath, SelectedGameName);
-			if (!Directory.Exists(gamePath))
-			{
-				return new List<string>();
-			}
-			return Directory.GetDirectories(gamePath).Select(Path.GetFileName).Where(name => name != null).ToList()!;
+			RunMenuLoop(
+				items: games,
+				itemSelected: name =>
+				{
+					SelectedGameName = name;
+					onGameSelected();
+				},
+				backTitle: "Zurück"
+			);
 		}
 
 		private void StartNewGame()
 		{
-			var game = new Game(Path.Combine(SelectedGameFolderPath, SelectedGameName + ".json"));
+			string gameFile = Path.Combine(SelectedGameFolderPath, $"{SelectedGameName}.json");
+			if (!File.Exists(gameFile))
+			{
+				PrintError("Spieldatei nicht gefunden.");
+				return;
+			}
+
+			var game = new Game(gameFile);
 		}
 
 		private void StartLoadedGame()
 		{
-			var scores = GetScores();
+			var scores = GetDirectories(Path.Combine(baseJSONPath, SelectedGameName));
 
 			if (scores.Count == 0)
 			{
-				Console.Clear();
-				Console.ForegroundColor = ConsoleColor.Red;
-				Console.WriteLine("Keine gespeicherten Spielstände gefunden.");
-				Console.WriteLine("Bitte starte zuerst ein neues Spiel.");
-				Console.ResetColor();
-				Console.ReadKey();
+				PrintError("Keine gespeicherten Spielstände gefunden.\nBitte starte zuerst ein neues Spiel.");
 				return;
 			}
 
-			bool inSelection = true;
-			while (inSelection)
-			{
-				Console.Clear();
-
-				List<MenuItem> items = scores
-					.Select((score, index) =>
-						new MenuItem(index == 0, score, () =>
-						{
-							StartLoadedGame(score);
-							inSelection = false;
-						}))
-					.ToList();
-
-				items.Add(new MenuItem(false, "Zurück", () => inSelection = false));
-
-				MainMenu = new Menu(items);
-				var selected = MainMenu.Run();
-				selected.Action();
-			}
+			RunMenuLoop(
+				items: scores,
+				itemSelected: score =>
+				{
+					StartLoadedGame(score);
+				},
+				backTitle: "Zurück"
+			);
 		}
 
 		private void StartLoadedGame(string scoreName)
 		{
-			var game = new Game("");
-			//TODO
+			string saveFile = Path.Combine(SelectedGameFolderPath, scoreName, "save.json");
+			if (!File.Exists(saveFile))
+			{
+				PrintError("Spielstand nicht gefunden.");
+				return;
+			}
+
+			var game = new Game(saveFile);
+			// TODO: Start game loop with loaded data
+		}
+
+		private void RunMenuLoop(List<string> items, Action<string> itemSelected, string backTitle)
+		{
+			bool inSelection = true;
+
+			while (inSelection)
+			{
+				Console.Clear();
+
+				var menuItems = items
+					.Select((name, index) =>
+						new MenuItem(index == 0, name, () =>
+						{
+							itemSelected(name);
+							inSelection = false;
+						}))
+					.ToList();
+
+				menuItems.Add(new MenuItem(false, backTitle, () => inSelection = false));
+
+				MainMenu = new Menu(menuItems);
+				var selected = MainMenu.Run();
+				selected.Action?.Invoke();
+			}
+		}
+
+		private List<string> GetDirectories(string path) =>
+			Directory.Exists(path)
+				? Directory.GetDirectories(path).Select(Path.GetFileName).Where(name => !string.IsNullOrEmpty(name)).ToList()!
+				: new List<string>();
+
+		private void PrintError(string message)
+		{
+			Console.Clear();
+			Console.ForegroundColor = ConsoleColor.Red;
+			Console.WriteLine(message);
+			Console.ResetColor();
+			Console.ReadKey(true);
 		}
 	}
 }
