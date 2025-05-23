@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="JSON\Spiel 1\Spielstand 1\" />
     <Folder Include="JSON\Spiel 2\" />
   </ItemGroup>
 

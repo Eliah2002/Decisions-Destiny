@@ -1,4 +1,6 @@
-﻿namespace Decisions___Destiny.Models
+﻿using System.Text.Json;
+
+namespace Decisions___Destiny.Models
 {
 	public class Game
 	{
@@ -6,12 +8,15 @@
 		public HashSet<string> Flags { get; set; }
 		public string CurrentSceneID { get; set; }
 
-        public Game()
+		public Game(string jsonPath)
 		{
-
 			Console.Clear();
+
+			string jsonContent = File.ReadAllText(jsonPath);
+			List<Scene> Scenes = JsonSerializer.Deserialize<List<Scene>>(jsonContent);
+
+			Scenes.FirstOrDefault().StartScene();
+			Console.ReadLine();
 		}
-
-
 	}
 }

@@ -29,12 +29,12 @@
 		{
 			if (MenuItems[i].Selected)
 			{
-				Console.ForegroundColor = ConsoleColor.Blue;
+				Console.ForegroundColor = ConsoleColor.Cyan;
 				Console.WriteLine($">{i + 1}. {MenuItems[i].Title}");
 			}
 			else
 			{
-				if(i == MenuItems.Count - 1) //Letztes Item ist Exit 
+				if (i == MenuItems.Count - 1) //Letztes Item ist Exit 
 				{
 					Console.ForegroundColor = ConsoleColor.DarkRed;
 				}

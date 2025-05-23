@@ -24,18 +24,17 @@ namespace Decisions___Destiny
 			"JSON"
 		);
 
-        internal string SelectedGamePath
-        {
-            get
-            {
+		internal string SelectedGameFolderPath
+		{
+			get
+			{
 				return Path.Combine(baseJSONPath, SelectedGameName);
-
-            }
-        }
+			}
+		}
 
 		private bool ProgramIsRunning { get; set; }
 		internal string SelectedGameName { get; set; } = String.Empty;
-        public Menu? MainMenu { get; set; }
+		public Menu? MainMenu { get; set; }
 
 		public void Start()
 		{
@@ -121,7 +120,7 @@ namespace Decisions___Destiny
 
 		private void StartNewGame()
 		{
-			var game = new Game();
+			var game = new Game(Path.Combine(SelectedGameFolderPath, SelectedGameName + ".json"));
 		}
 
 		private void StartLoadedGame()
@@ -163,7 +162,7 @@ namespace Decisions___Destiny
 
 		private void StartLoadedGame(string scoreName)
 		{
-			var game = new Game(scoreName);
+			var game = new Game("");
 			//TODO
 		}
 	}
