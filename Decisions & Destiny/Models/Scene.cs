@@ -2,22 +2,45 @@
 {
 	public class Scene
 	{
-		public string Id { get; set; } = String.Empty;
+		public string ID { get; set; } = String.Empty;
 		public string Text { get; set; } = String.Empty;
 		public List<Choice> Choices { get; set; } = new();
 
-		public void StartScene()
+		public void StartScene(Game game)
 		{
-			Console.Clear();
-			Console.ForegroundColor = ConsoleColor.Gray;
-			Console.WriteLine(Text);
-			Console.WriteLine();
-
-			foreach (Choice choice in Choices)
+			List<MenuItem> choiceItems = new List<MenuItem>();
+			for (int i = 0; i < Choices.Count; i++)
 			{
-				Console.WriteLine(choice.Text);
-				Console.WriteLine();
+				var choice = Choices[i];
+
+				// Nur anzeigen, wenn Flags passen
+				if (choice.RequiredFlags.All(flag => game.Flags.Contains(flag)))
+				{
+					bool isFirst = choiceItems.Count == 0;
+					choiceItems.Add(new MenuItem(isFirst, choice.Text, () =>
+					{
+						// Flags setzen
+						foreach (var flag in choice.SetFlags)
+						{
+							game.Flags.Add(flag);
+						}
+
+						// Zur nächsten Szene springen
+						game.CurrentSceneID = choice.NextSceneID;
+					}));
+				}
 			}
+
+			// Exit-Option, falls keine Auswahl passt
+			if (choiceItems.Count == 0)
+			{
+				choiceItems.Add(new MenuItem(true, "Kein gültiger Pfad... (Spielende)", () => Environment.Exit(0)));
+			}
+
+			Menu choiceMenu = new Menu(choiceItems);
+			MenuItem selected = choiceMenu.RunScene(Text);
+			selected.Action();
 		}
+
 	}
 }

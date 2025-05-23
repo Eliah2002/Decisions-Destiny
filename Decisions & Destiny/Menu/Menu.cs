@@ -13,6 +13,7 @@
 		IsRunning = true;
 		while (true)
 		{
+			Console.Clear();
 			DrawMenu();
 			var menuItem = MenuAction(Console.ReadKey());
 			if (menuItem != null)
@@ -24,7 +25,6 @@
 
 	private void DrawMenu()
 	{
-		Console.Clear();
 		for (int i = 0; i < MenuItems.Count; i++)
 		{
 			if (MenuItems[i].Selected)
@@ -38,6 +38,42 @@
 				{
 					Console.ForegroundColor = ConsoleColor.DarkRed;
 				}
+				Console.WriteLine($"{i + 1}. {MenuItems[i].Title}");
+			}
+			Console.ResetColor();
+		}
+	}
+
+	public MenuItem RunScene(string scenenText)
+	{
+		IsRunning = true;
+		while (true)
+		{
+			Console.Clear();
+			Console.ForegroundColor = ConsoleColor.Gray;
+			Console.WriteLine(scenenText);
+			Console.ResetColor();
+			Console.WriteLine();
+			DisplayChoices();
+			var menuItem = MenuAction(Console.ReadKey());
+			if (menuItem != null)
+			{
+				return menuItem;
+			}
+		}
+	}
+
+	private void DisplayChoices()
+	{
+		for (int i = 0; i < MenuItems.Count; i++)
+		{
+			if (MenuItems[i].Selected)
+			{
+				Console.ForegroundColor = ConsoleColor.Cyan;
+				Console.WriteLine($">{i + 1}. {MenuItems[i].Title}");
+			}
+			else
+			{
 				Console.WriteLine($"{i + 1}. {MenuItems[i].Title}");
 			}
 			Console.ResetColor();

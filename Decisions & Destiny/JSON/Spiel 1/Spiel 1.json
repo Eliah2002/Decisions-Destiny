@@ -1,6 +1,21 @@
-[
+[  
   {
-    "Id": "höhlen_eingang",
+    "ID": "zuhause",
+    "Text": "Auf dem Tisch liegt eine Taschenlampe. Nimmst du sie mit?",
+    "Choices": [
+      {
+        "Text": "Taschenlampe mitnehmen",
+        "NextSceneID": "höhlen_eingang",
+        "SetFlags": [ "hat_taschenlampe" ]
+      },
+      {
+        "Text": "Taschenlampe stehen lassen",
+        "NextSceneID": "höhlen_eingang"
+      }
+    ]
+  },
+  {
+    "ID": "höhlen_eingang",
     "Text": "Du stehst vor einer dunklen Höhle. Was tust du?",
     "Choices": [
       {
@@ -16,7 +31,7 @@
     ]
   },
   {
-    "Id": "innerhalb_höhle",
+    "ID": "innerhalb_höhle",
     "Text": "Du findest einen Schlüssel. Willst du tiefer in die Höhle?",
     "Choices": [
       {
