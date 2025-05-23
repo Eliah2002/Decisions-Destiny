@@ -13,25 +13,21 @@
 			{
 				var choice = Choices[i];
 
-				// Nur anzeigen, wenn Flags passen
 				if (choice.RequiredFlags.All(flag => game.Flags.Contains(flag)))
 				{
 					bool isFirst = choiceItems.Count == 0;
 					choiceItems.Add(new MenuItem(isFirst, choice.Text, () =>
 					{
-						// Flags setzen
 						foreach (var flag in choice.SetFlags)
 						{
 							game.Flags.Add(flag);
 						}
 
-						// Zur nächsten Szene springen
 						game.CurrentSceneID = choice.NextSceneID;
 					}));
 				}
 			}
 
-			// Exit-Option, falls keine Auswahl passt
 			if (choiceItems.Count == 0)
 			{
 				choiceItems.Add(new MenuItem(true, "Kein gültiger Pfad... (Spielende)", () => Environment.Exit(0)));
@@ -41,6 +37,5 @@
 			MenuItem selected = choiceMenu.RunScene(Text);
 			selected.Action();
 		}
-
 	}
 }
