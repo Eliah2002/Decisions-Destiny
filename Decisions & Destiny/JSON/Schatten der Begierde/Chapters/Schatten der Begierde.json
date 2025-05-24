@@ -1,0 +1,225 @@
+[
+  {
+    "ID": "wohnung",
+    "Text": "Es ist spät in der Nacht, und du sitzt allein in deiner Wohnung, als plötzlich jemand an deine Tür klopft. Die Stimme ist tief und verführerisch: „Darf ich eintreten?“",
+    "Choices": [
+      {
+        "Text": "Lass die Person herein",
+        "NextSceneID": "eintritt",
+        "SetFlags": [ "hat_eingelassen" ]
+      },
+      {
+        "Text": "Ignoriere das Klopfen",
+        "NextSceneID": "ruhe"
+      }
+    ]
+  },
+  {
+    "ID": "eintritt",
+    "Text": "Die Tür öffnet sich, und ein geheimnisvoller Fremder betritt den Raum. Seine Augen funkeln dunkel, und seine Nähe lässt dein Herz schneller schlagen. Er setzt sich dicht neben dich und flüstert: „Ich habe dich gesucht.“",
+    "Choices": [
+      {
+        "Text": "Lass dich auf ihn ein",
+        "NextSceneID": "nähe",
+        "SetFlags": [ "verführt" ]
+      },
+      {
+        "Text": "Weiche zurück, du bist misstrauisch",
+        "NextSceneID": "misstrauen"
+      }
+    ]
+  },
+  {
+    "ID": "ruhe",
+    "Text": "Du entscheidest dich, die Tür nicht zu öffnen. Die Stille kehrt zurück, doch du kannst das Gefühl nicht abschütteln, beobachtet zu werden. Vielleicht war es nur Einbildung.",
+    "Choices": [
+      {
+        "Text": "Geh schlafen",
+        "NextSceneID": "schlaf"
+      },
+      {
+        "Text": "Schau zum Fenster und späh hinaus",
+        "NextSceneID": "blick"
+      }
+    ]
+  },
+  {
+    "ID": "nähe",
+    "Text": "Seine Hand berührt sanft deinen Arm, während er seine Geschichte erzählt: Er ist auf der Suche nach dir – wegen eines dunklen Geheimnisses, das nur ihr beide kennt. Seine Stimme senkt sich, seine Augen suchen deine.",
+    "Choices": [
+      {
+        "Text": "Erzähle ihm dein Geheimnis",
+        "NextSceneID": "vertrauen"
+      },
+      {
+        "Text": "Bewahre dein Schweigen",
+        "NextSceneID": "verschlossen"
+      }
+    ]
+  },
+  {
+    "ID": "misstrauen",
+    "Text": "Du spürst, dass du dich schützen musst. Du sagst, dass du niemanden suchst und dass er gehen soll. Doch seine dunkle Aura lässt dich nicht los.",
+    "Choices": [
+      {
+        "Text": "Lass ihn gehen",
+        "NextSceneID": "allein"
+      },
+      {
+        "Text": "Biete ihm einen Kaffee an, um mehr zu erfahren",
+        "NextSceneID": "kaffee"
+      }
+    ]
+  },
+  {
+    "ID": "schlaf",
+    "Text": "Du schließt die Augen, versuchst zu schlafen, doch die Schatten deiner Gedanken lassen dich nicht los.",
+    "Choices": []
+  },
+  {
+    "ID": "blick",
+    "Text": "Du siehst eine Gestalt in der Dunkelheit stehen, die dich unverwandt ansieht. Ein kalter Schauer läuft dir über den Rücken.",
+    "Choices": [
+      {
+        "Text": "Rufe die Polizei",
+        "NextSceneID": "polizei"
+      },
+      {
+        "Text": "Zieh dich zurück und warte ab",
+        "NextSceneID": "warte"
+      }
+    ]
+  },
+  {
+    "ID": "vertrauen",
+    "Text": "Du flüsterst dein dunkles Geheimnis, und er zieht dich enger an sich. „Wir sind verbunden, für immer“, sagt er und seine Lippen berühren deine.",
+    "Choices": [
+      {
+        "Text": "Gib dich der Leidenschaft hin",
+        "NextSceneID": "leidenschaft"
+      },
+      {
+        "Text": "Zweifel kommen auf, du willst mehr wissen",
+        "NextSceneID": "zweifel"
+      }
+    ]
+  },
+  {
+    "ID": "verschlossen",
+    "Text": "Du hältst deine Mauern hoch, doch er lässt nicht locker. Das Spiel aus Nähe und Distanz beginnt – gefährlich und berauschend.",
+    "Choices": [
+      {
+        "Text": "Lass dich fallen",
+        "NextSceneID": "leidenschaft"
+      },
+      {
+        "Text": "Fliehe aus der Wohnung",
+        "NextSceneID": "flucht"
+      }
+    ]
+  },
+  {
+    "ID": "allein",
+    "Text": "Er verlässt die Wohnung und verschwindet in der Nacht. Du bist allein mit deinen Gedanken und einem Gefühl, das du nicht ganz greifen kannst.",
+    "Choices": []
+  },
+  {
+    "ID": "kaffee",
+    "Text": "Ihr sitzt zusammen und der Kaffee wird schnell zur Ausrede für tiefere Gespräche. Die Spannung zwischen euch wächst, die Dunkelheit wird zum Vertrauten.",
+    "Choices": [
+      {
+        "Text": "Lass ihn näher kommen",
+        "NextSceneID": "nähe"
+      },
+      {
+        "Text": "Beende das Treffen",
+        "NextSceneID": "allein"
+      }
+    ]
+  },
+  {
+    "ID": "polizei",
+    "Text": "Die Polizei kommt, doch die Gestalt ist verschwunden. Was suchte er wirklich? Deine Gedanken drehen sich im Kreis.",
+    "Choices": []
+  },
+  {
+    "ID": "warte",
+    "Text": "Du wartest, bis die Gestalt sich entfernt. Ein Gefühl von Bedrohung und Verlangen vermischt sich in dir.",
+    "Choices": [
+      {
+        "Text": "Verlass das Haus",
+        "NextSceneID": "flucht"
+      },
+      {
+        "Text": "Bleib und beobachte",
+        "NextSceneID": "nachtspaziergang"
+      }
+    ]
+  },
+  {
+    "ID": "leidenschaft",
+    "Text": "Die Nacht gehört euch. Zwischen Schatten und Flüstern verliert ihr euch in dunkler Leidenschaft, die mehr ist als nur Verlangen.",
+    "Choices": [
+      {
+        "Text": "Gib dich ihm völlig hin",
+        "NextSceneID": "verbindung"
+      },
+      {
+        "Text": "Halte inne, etwas beunruhigt dich",
+        "NextSceneID": "zweifel"
+      }
+    ]
+  },
+  {
+    "ID": "zweifel",
+    "Text": "Etwas an ihm wirkt gefährlich. Du spürst, dass diese Geschichte mehr Schatten hat, als du gedacht hast.",
+    "Choices": [
+      {
+        "Text": "Frage ihn nach seiner Vergangenheit",
+        "NextSceneID": "offenbarung"
+      },
+      {
+        "Text": "Zieh dich zurück",
+        "NextSceneID": "flucht"
+      }
+    ]
+  },
+  {
+    "ID": "flucht",
+    "Text": "Du verlässt die Wohnung, die kalte Nacht umfängt dich. Die Angst und Faszination sind nah beieinander.",
+    "Choices": []
+  },
+  {
+    "ID": "nachtspaziergang",
+    "Text": "Du folgst der Gestalt in die Nacht und findest dich in einem Spiel aus Verführung und Gefahr wieder.",
+    "Choices": [
+      {
+        "Text": "Geh weiter mit ihm",
+        "NextSceneID": "verbindung"
+      },
+      {
+        "Text": "Dreh dich um und geh zurück",
+        "NextSceneID": "flucht"
+      }
+    ]
+  },
+  {
+    "ID": "verbindung",
+    "Text": "Ihr verbindet euch auf eine Art, die keine Worte braucht – eine dunkle Bindung, die dich nicht mehr loslässt.",
+    "Choices": []
+  },
+  {
+    "ID": "offenbarung",
+    "Text": "Er erzählt von einer Vergangenheit voller Schmerz, Verrat und dunkler Versprechen. Du erkennst, dass eure Geschichte erst begonnen hat.",
+    "Choices": [
+      {
+        "Text": "Bleib bei ihm",
+        "NextSceneID": "verbindung"
+      },
+      {
+        "Text": "Lauf davon",
+        "NextSceneID": "flucht"
+      }
+    ]
+  }
+]

@@ -1,4 +1,5 @@
 ﻿using Decisions___Destiny.Enums;
+using Decisions___Destiny.Helpers;
 using System.Text.Json;
 
 namespace Decisions___Destiny.Models
@@ -45,7 +46,7 @@ namespace Decisions___Destiny.Models
 			Scenes = sceneList.ToDictionary(s => s.ID, s => s);
 
 			// Startszene festlegen (erste in der Liste)
-			if(string.IsNullOrEmpty(currentSceneID))
+			if (string.IsNullOrEmpty(currentSceneID))
 			{
 				var firstScene = sceneList.FirstOrDefault(scene => scene.ID.Equals("start", StringComparison.OrdinalIgnoreCase))
 					 ?? sceneList.FirstOrDefault();
@@ -66,6 +67,8 @@ namespace Decisions___Destiny.Models
 		/// </summary>
 		private void Run()
 		{
+			IntroScreen.PlayIntro(DecisionsAndDestiny.Singleton.SelectedGameName);
+
 			while (Scenes.ContainsKey(CurrentSceneID))
 			{
 				Scene currentScene = Scenes[CurrentSceneID];
