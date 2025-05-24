@@ -32,6 +32,8 @@
 					break;
 				case MenuCommand.Select:
 					return MenuItems.First(i => i.Selected);
+				case MenuCommand.Escape:
+					return MenuItems.First(i => i.Selected);
 			}
 		}
 	}
@@ -107,6 +109,7 @@
 			ConsoleKey.Tab or ConsoleKey.DownArrow or ConsoleKey.S => MenuCommand.MoveDown,
 			ConsoleKey.UpArrow or ConsoleKey.W => MenuCommand.MoveUp,
 			ConsoleKey.Enter or ConsoleKey.Spacebar => MenuCommand.Select,
+			ConsoleKey.Escape => MenuCommand.Escape,
 			_ => MenuCommand.None
 		};
 
@@ -115,6 +118,7 @@
 		MoveUp,
 		MoveDown,
 		Select,
+		Escape,
 		None
 	}
 }

@@ -1,4 +1,5 @@
-﻿using Decisions___Destiny.Models;
+﻿using Decisions___Destiny.Helpers;
+using Decisions___Destiny.Models;
 
 namespace Decisions___Destiny
 {
@@ -36,7 +37,7 @@ namespace Decisions___Destiny
 
 			if (Directory.Exists(baseJSONPath) == false)
 			{
-				Console.WriteLine("JSON-Ordner wurde nicht gefunden.");
+				Printer.PrintError("JSON-Ordner wurde nicht gefunden.");
 				return;
 			}
 
@@ -63,7 +64,7 @@ namespace Decisions___Destiny
 
 			if (games.Count == 0)
 			{
-				PrintError("Keine Spiele gefunden!");
+				Printer.PrintError("Keine Spiele gefunden!");
 				return;
 			}
 
@@ -83,7 +84,7 @@ namespace Decisions___Destiny
 			string gameFile = Path.Combine(SelectedGameFolderPath, $"{SelectedGameName}.json");
 			if (!File.Exists(gameFile))
 			{
-				PrintError("Spieldatei nicht gefunden.");
+				Printer.PrintError("Spieldatei nicht gefunden.");
 				return;
 			}
 
@@ -96,7 +97,7 @@ namespace Decisions___Destiny
 
 			if (scores.Count == 0)
 			{
-				PrintError("Keine gespeicherten Spielstände gefunden.\nBitte starte zuerst ein neues Spiel.");
+				Printer.PrintError("Keine gespeicherten Spielstände gefunden.\nBitte starte zuerst ein neues Spiel.");
 				return;
 			}
 
@@ -115,7 +116,7 @@ namespace Decisions___Destiny
 			string saveFile = Path.Combine(SelectedGameFolderPath, scoreName, "save.json");
 			if (!File.Exists(saveFile))
 			{
-				PrintError("Spielstand nicht gefunden.");
+				Printer.PrintError("Spielstand nicht gefunden.");
 				return;
 			}
 
@@ -152,14 +153,5 @@ namespace Decisions___Destiny
 			Directory.Exists(path)
 				? Directory.GetDirectories(path).Select(Path.GetFileName).Where(name => !string.IsNullOrEmpty(name)).ToList()!
 				: new List<string>();
-
-		private void PrintError(string message)
-		{
-			Console.Clear();
-			Console.ForegroundColor = ConsoleColor.Red;
-			Console.WriteLine(message);
-			Console.ResetColor();
-			Console.ReadKey(true);
-		}
 	}
 }

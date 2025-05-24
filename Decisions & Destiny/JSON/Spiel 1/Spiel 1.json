@@ -44,5 +44,9 @@
         "NextSceneID": "stadtmitte"
       }
     ]
+  },
+  {
+    "ID": "stadtmitte",
+    "Text": "Du bist in der Stadtmitte"
   }
 ]
