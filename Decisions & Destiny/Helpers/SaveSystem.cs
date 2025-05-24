@@ -27,8 +27,7 @@ namespace Decisions___Destiny.Helpers
 
 			// Pfad zum Speicherordner + Dateiname
 			string path = Path.Combine(
-				DecisionsAndDestiny.Singleton.SelectedGameFolderPath,
-				"GespeicherteSpiele",
+				DecisionsAndDestiny.Singleton.SelectedGameScoresFolderPath,
 				$"{saveName}.json"
 			);
 

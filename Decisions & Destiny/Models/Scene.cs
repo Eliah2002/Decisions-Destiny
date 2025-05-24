@@ -50,7 +50,7 @@ namespace Decisions___Destiny.Models
 			choiceItems.Add(new MenuItem(isSafeMenuItem: true));
 
 			// Falls keine Auswahl möglich ist – Spiel beenden
-			if (choiceItems.Count == 1) // nur der Save-Button wurde hinzugefügt
+			if (choiceItems.Count == 1)
 			{
 				choiceItems.Add(new MenuItem(false, "Kein gültiger Pfad... (Spielende)", () =>
 				{

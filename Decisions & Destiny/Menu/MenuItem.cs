@@ -46,8 +46,6 @@ namespace Decisions___Destiny.Models
 
 			while (inSelection)
 			{
-				Console.Clear();
-
 				var menuItems = new List<MenuItem>()
 				{
 					new MenuItem(true,  "Speichern",        () => { inSelection = false; Save(true); }),

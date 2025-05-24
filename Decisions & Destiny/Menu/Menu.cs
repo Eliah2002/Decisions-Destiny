@@ -1,5 +1,5 @@
 ﻿using Decisions___Destiny.Enums;
-
+using Decisions___Destiny.Helpers;
 
 namespace Decisions___Destiny.Models
 {
@@ -32,7 +32,7 @@ namespace Decisions___Destiny.Models
 			while (true)
 			{
 				Console.Clear();
-				DisplayMenu(highlightExit: true);
+				DisplayMenu(isMainMenu: true);
 
 				var key = Console.ReadKey(true).Key;
 				var command = ParseInput(key);
@@ -58,15 +58,21 @@ namespace Decisions___Destiny.Models
 		/// </summary>
 		public MenuItem RunScene(string sceneText)
 		{
+			bool hasPrintedOnce = false;
 			while (true)
 			{
 				Console.Clear();
-				Console.ForegroundColor = ConsoleColor.Gray;
-				Console.WriteLine(sceneText);
-				Console.ResetColor();
+				Printer.PrintWithDelay(sceneText, hasPrintedOnce);
+				hasPrintedOnce = true;
 				Console.WriteLine();
 
-				DisplayMenu(highlightExit: false);
+				// Eingabepuffer leeren nach Textanzeige
+				while (Console.KeyAvailable)
+				{
+					Console.ReadKey(true);
+				}
+
+				DisplayMenu(isMainMenu: false);
 
 				var key = Console.ReadKey(true).Key;
 				var command = ParseInput(key);
@@ -98,8 +104,12 @@ namespace Decisions___Destiny.Models
 		/// <summary>
 		/// Zeigt die Menüeinträge im Terminal an.
 		/// </summary>
-		private void DisplayMenu(bool highlightExit)
+		private void DisplayMenu(bool isMainMenu)
 		{
+			if (isMainMenu)
+			{
+				Printer.ShowHeader("HAUPTMENÜ – Decisions & Destiny");
+			}
 			for (int i = 0; i < MenuItems.Count; i++)
 			{
 				var item = MenuItems[i];
@@ -112,7 +122,7 @@ namespace Decisions___Destiny.Models
 				Console.Write(item.Selected ? ">" : " ");
 
 				// Farbe für Exit-Eintrag am Ende
-				if (!item.Selected && highlightExit && i == MenuItems.Count - 1)
+				if (!item.Selected && isMainMenu && i == MenuItems.Count - 1)
 				{
 					Console.ForegroundColor = ConsoleColor.DarkRed;
 				}

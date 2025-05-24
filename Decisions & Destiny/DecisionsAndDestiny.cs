@@ -33,10 +33,10 @@ namespace Decisions___Destiny
 		internal string SelectedGameFolderPath => Path.Combine(baseJSONPath, SelectedGameName);
 
 		// Absoluter Pfad zur json-Datei des aktuell gewählten Spielverzeichnis
-		internal string SelectedGameJSONPath => Path.Combine(SelectedGameFolderPath, $"{SelectedGameName}.json");
+		internal string SelectedGameJSONPath => Path.Combine(SelectedGameFolderPath, "Chapters", $"{SelectedGameName}.json");
 
 		// Absoluter Pfad zu den Spielständen des aktuell gewählten Spielverzeichnis
-		internal string SelectedGameScoresFolderPath => Path.Combine(SelectedGameFolderPath, "GespeicherteSpiele");
+		internal string SelectedGameScoresFolderPath => Path.Combine(SelectedGameFolderPath, "Saves");
 
 		// Hauptmenü-Steuerung
 		private bool programIsRunning;
@@ -59,8 +59,6 @@ namespace Decisions___Destiny
 
 			while (programIsRunning)
 			{
-				Console.Clear();
-
 				var gameFolders = GetDirectories(baseJSONPath);
 				if (gameFolders.Count == 0)
 				{
@@ -94,7 +92,6 @@ namespace Decisions___Destiny
 
 			while (inSubMenu)
 			{
-				Console.Clear();
 				var menuItems = new List<MenuItem>
 				{
 					new MenuItem(true, "Neues Spiel starten", () =>
@@ -183,8 +180,6 @@ namespace Decisions___Destiny
 
 			while (inSelection)
 			{
-				Console.Clear();
-
 				var menuItems = items
 					.Select((name, index) => new MenuItem(index == 0, name, () =>
 					{

@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="JSON\Spiel 1\GespeicherteSpiele\" />
+    <Folder Include="JSON\Spiel 1\Saves\" />
   </ItemGroup>
 
 </Project>
