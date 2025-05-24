@@ -1,6 +1,7 @@
 {
-  "CurrentSceneID": "h\u00F6hlen_eingang",
+  "CurrentSceneID": "innerhalb_h\u00F6hle",
   "Flags": [
-    "hat_taschenlampe"
+    "hat_taschenlampe",
+    "findet_schl\u00FCssel"
   ]
 }

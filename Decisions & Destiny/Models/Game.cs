@@ -25,7 +25,7 @@ namespace Decisions___Destiny.Models
 		/// <summary>
 		/// Startet das Spiel, lädt Szenen aus einer JSON-Datei und beginnt die erste Szene.
 		/// </summary>
-		public void Start(string jsonPath)
+		public void Start(string jsonPath, string? currentSceneID = null)
 		{
 			Console.Clear();
 
@@ -37,7 +37,7 @@ namespace Decisions___Destiny.Models
 			Scenes = sceneList.ToDictionary(s => s.ID, s => s);
 
 			// Startszene festlegen (erste in der Liste)
-			CurrentSceneID = sceneList.First().ID;
+			CurrentSceneID = string.IsNullOrEmpty(currentSceneID) ? sceneList.First().ID : currentSceneID;
 
 			// Spiel ausführen
 			Run();

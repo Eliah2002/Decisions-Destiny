@@ -32,6 +32,12 @@ namespace Decisions___Destiny
 		// Absoluter Pfad zum aktuell gewählten Spielverzeichnis
 		internal string SelectedGameFolderPath => Path.Combine(baseJSONPath, SelectedGameName);
 
+		// Absoluter Pfad zur json-Datei des aktuell gewählten Spielverzeichnis
+		internal string SelectedGameJSONPath => Path.Combine(SelectedGameFolderPath, $"{SelectedGameName}.json");
+
+		// Absoluter Pfad zu den Spielständen des aktuell gewählten Spielverzeichnis
+		internal string SelectedGameScoresFolderPath => Path.Combine(SelectedGameFolderPath, "GespeicherteSpiele");
+
 		// Hauptmenü-Steuerung
 		private bool programIsRunning;
 		public Menu? MainMenu { get; private set; }
@@ -91,15 +97,13 @@ namespace Decisions___Destiny
 		/// </summary>
 		private void StartNewGame()
 		{
-			string gameFile = Path.Combine(SelectedGameFolderPath, $"{SelectedGameName}.json");
-
-			if (!File.Exists(gameFile))
+			if (!File.Exists(SelectedGameJSONPath))
 			{
 				Printer.PrintError("Spieldatei nicht gefunden.");
 				return;
 			}
 
-			Game.Singleton.Start(gameFile);
+			Game.Singleton.Start(SelectedGameJSONPath);
 		}
 
 		/// <summary>
@@ -107,16 +111,22 @@ namespace Decisions___Destiny
 		/// </summary>
 		private void StartLoadedGame()
 		{
-			var scoresPath = Path.Combine(baseJSONPath, SelectedGameName);
-			var scores = GetDirectories(scoresPath);
+			var scores = Directory.GetFiles(SelectedGameScoresFolderPath, "*.json");
+			List<string> scoreNames = new List<string>();
+			foreach (var score in scores)
+			{
+				string scoreName = Path.GetFileNameWithoutExtension(score);
+				scoreNames.Add(scoreName);
+			}
 
-			if (scores.Count == 0)
+
+			if (scoreNames.Count == 0)
 			{
 				Printer.PrintError("Keine gespeicherten Spielstände gefunden.\nBitte starte zuerst ein neues Spiel.");
 				return;
 			}
 
-			RunMenuLoop(scores, StartLoadedGame, "Zurück");
+			RunMenuLoop(scoreNames, StartLoadedGame, "Zurück");
 		}
 
 		/// <summary>
@@ -124,7 +134,7 @@ namespace Decisions___Destiny
 		/// </summary>
 		private void StartLoadedGame(string scoreName)
 		{
-			string saveFile = Path.Combine(SelectedGameFolderPath, scoreName, "save.json");
+			string saveFile = Path.Combine(SelectedGameScoresFolderPath, $"{scoreName}.json");
 
 			if (!File.Exists(saveFile))
 			{
@@ -132,7 +142,8 @@ namespace Decisions___Destiny
 				return;
 			}
 
-			Game.Singleton.Start(saveFile);
+			SaveSystem.LoadGame(Game.Singleton, saveFile);
+			Game.Singleton.Start(SelectedGameJSONPath, Game.Singleton.CurrentSceneID);
 		}
 
 		/// <summary>
