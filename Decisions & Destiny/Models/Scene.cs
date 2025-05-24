@@ -6,7 +6,7 @@
 		public string Text { get; set; } = String.Empty;
 		public List<Choice> Choices { get; set; } = new();
 
-		public void StartScene(Game game)
+		public bool StartScene(Game game)
 		{
 			List<MenuItem> choiceItems = new List<MenuItem>();
 			for (int i = 0; i < Choices.Count; i++)
@@ -27,6 +27,7 @@
 					}));
 				}
 			}
+			choiceItems.Add(new MenuItem(true));
 
 			if (choiceItems.Count == 0)
 			{
@@ -36,6 +37,10 @@
 			Menu choiceMenu = new Menu(choiceItems);
 			MenuItem selected = choiceMenu.RunScene(Text);
 			selected.Action();
+			if (selected.IsSafeMenuItem)
+				return true;
+			else
+				return false;
 		}
 	}
 }

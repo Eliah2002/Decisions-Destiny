@@ -1,14 +1,18 @@
 ﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Decisions___Destiny.Models
 {
 	public class Game
 	{
+		public static Game Singleton { get; set; } = new Game();
+
+		[JsonIgnore]
 		public Dictionary<string, Scene> Scenes { get; set; } = new();
 		public HashSet<string> Flags { get; set; } = new();
 		public string CurrentSceneID { get; set; } = "";
 
-		public Game(string jsonPath)
+		public void Start(string jsonPath)
 		{
 			Console.Clear();
 			string jsonContent = File.ReadAllText(jsonPath);
@@ -21,10 +25,11 @@ namespace Decisions___Destiny.Models
 		}
 		private void Run()
 		{
-			while (Scenes.ContainsKey(CurrentSceneID))
+			bool close = false;
+			while (Scenes.ContainsKey(CurrentSceneID) && !close)
 			{
 				Scene currentScene = Scenes[CurrentSceneID];
-				currentScene.StartScene(this);
+				close = currentScene.StartScene(this);
 			}
 		}
 	}

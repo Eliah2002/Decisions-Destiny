@@ -32,7 +32,7 @@
   },
   {
     "ID": "innerhalb_höhle",
-    "Text": "Du findest einen Schlüssel. Willst du tiefer in die Höhle?",
+    "Text": "Du findest einen Schl\u00FCssel. Willst du tiefer in die Höhle?",
     "Choices": [
       {
         "Text": "Weiter die Höhle erkunden",

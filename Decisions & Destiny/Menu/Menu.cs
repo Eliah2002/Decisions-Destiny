@@ -33,7 +33,7 @@
 				case MenuCommand.Select:
 					return MenuItems.First(i => i.Selected);
 				case MenuCommand.Escape:
-					return MenuItems.First(i => i.Selected);
+					return MenuItems.Last();//Last is exit
 			}
 		}
 	}
@@ -52,6 +52,15 @@
 
 			var input = Console.ReadKey(true).Key;
 			var command = ParseInput(input);
+
+			if (command == MenuCommand.Escape)
+			{
+				var saveManuItem = MenuItems.First(i => i.IsSafeMenuItem == true);
+				if (saveManuItem != null)
+				{
+					return saveManuItem;
+				}
+			}
 
 			switch (command)
 			{
@@ -73,6 +82,10 @@
 		{
 			var item = MenuItems[i];
 
+			if (item.IsSafeMenuItem)
+			{
+				continue;
+			}
 			if (item.Selected)
 			{
 				Console.ForegroundColor = ConsoleColor.Cyan;

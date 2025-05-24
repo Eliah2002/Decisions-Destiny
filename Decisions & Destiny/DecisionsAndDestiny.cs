@@ -88,7 +88,7 @@ namespace Decisions___Destiny
 				return;
 			}
 
-			var game = new Game(gameFile);
+			Game.Singleton.Start(gameFile);
 		}
 
 		private void StartLoadedGame()
@@ -120,7 +120,7 @@ namespace Decisions___Destiny
 				return;
 			}
 
-			var game = new Game(saveFile);
+			Game.Singleton.Start(saveFile);
 			// TODO: Start game loop with loaded data
 		}
 
