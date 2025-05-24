@@ -68,6 +68,7 @@ namespace Decisions___Destiny.Models
 		{
 			if (save)
 			{
+				Console.WriteLine();
 				Console.Write("Gib einen Namen für den Spielstand ein: ");
 				string? saveName = Console.ReadLine();
 
