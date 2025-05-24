@@ -3,6 +3,9 @@ using Decisions___Destiny.Models;
 
 namespace Decisions___Destiny
 {
+	/// <summary>
+	/// Hauptklasse des Spiels. Koordiniert Spielstart, Menüführung und Speicherverwaltung.
+	/// </summary>
 	public class DecisionsAndDestiny
 	{
 		private static DecisionsAndDestiny? singleton;
@@ -11,31 +14,36 @@ namespace Decisions___Destiny
 			get
 			{
 				if (singleton == null)
-				{
 					singleton = new DecisionsAndDestiny();
-				}
 				return singleton;
 			}
 			set { singleton = value; }
 		}
 
-		// three folders up because during runtime in bin\Debug\net7.0
+		// Pfad zum JSON-Ordner (3 Ordner über /bin/Debug/net7.0 hinaus)
 		private readonly string baseJSONPath = Path.Combine(
 			Directory.GetParent(AppContext.BaseDirectory)!.Parent!.Parent!.Parent!.FullName,
 			"JSON"
 		);
 
-		internal string SelectedGameName { get; set; } = String.Empty;
+		// Ausgewähltes Spiel (Verzeichnisname)
+		internal string SelectedGameName { get; set; } = string.Empty;
+
+		// Absoluter Pfad zum aktuell gewählten Spielverzeichnis
 		internal string SelectedGameFolderPath => Path.Combine(baseJSONPath, SelectedGameName);
 
+		// Hauptmenü-Steuerung
 		private bool programIsRunning;
 		public Menu? MainMenu { get; private set; }
 
+		/// <summary>
+		/// Startet das Hauptmenü und die Spielsteuerung.
+		/// </summary>
 		public void Start()
 		{
 			Console.CursorVisible = false;
 
-			if (Directory.Exists(baseJSONPath) == false)
+			if (!Directory.Exists(baseJSONPath))
 			{
 				Printer.PrintError("JSON-Ordner wurde nicht gefunden.");
 				return;
@@ -46,10 +54,10 @@ namespace Decisions___Destiny
 			while (programIsRunning)
 			{
 				Console.Clear();
-				MainMenu = new Menu(new List<MenuItem>()
+				MainMenu = new Menu(new List<MenuItem>
 				{
 					new MenuItem(true, "Neues Spiel starten", () => ShowGameSelection(StartNewGame)),
-					new MenuItem(false, "Lade Spiel", () => ShowGameSelection(StartLoadedGame)),
+					new MenuItem(false, "Spiel laden", () => ShowGameSelection(StartLoadedGame)),
 					new MenuItem(false, "Beenden", () => programIsRunning = false)
 				});
 
@@ -58,6 +66,9 @@ namespace Decisions___Destiny
 			}
 		}
 
+		/// <summary>
+		/// Zeigt verfügbaren Spieleordner zur Auswahl an.
+		/// </summary>
 		private void ShowGameSelection(Action onGameSelected)
 		{
 			var games = GetDirectories(baseJSONPath);
@@ -68,20 +79,20 @@ namespace Decisions___Destiny
 				return;
 			}
 
-			RunMenuLoop(
-				items: games,
-				itemSelected: name =>
-				{
-					SelectedGameName = name;
-					onGameSelected();
-				},
-				backTitle: "Zurück"
-			);
+			RunMenuLoop(games, name =>
+			{
+				SelectedGameName = name;
+				onGameSelected();
+			}, "Zurück");
 		}
 
+		/// <summary>
+		/// Startet ein neues Spiel durch Laden der Hauptspiel-JSON.
+		/// </summary>
 		private void StartNewGame()
 		{
 			string gameFile = Path.Combine(SelectedGameFolderPath, $"{SelectedGameName}.json");
+
 			if (!File.Exists(gameFile))
 			{
 				Printer.PrintError("Spieldatei nicht gefunden.");
@@ -91,9 +102,13 @@ namespace Decisions___Destiny
 			Game.Singleton.Start(gameFile);
 		}
 
+		/// <summary>
+		/// Zeigt gespeicherte Spielstände zur Auswahl an.
+		/// </summary>
 		private void StartLoadedGame()
 		{
-			var scores = GetDirectories(Path.Combine(baseJSONPath, SelectedGameName));
+			var scoresPath = Path.Combine(baseJSONPath, SelectedGameName);
+			var scores = GetDirectories(scoresPath);
 
 			if (scores.Count == 0)
 			{
@@ -101,19 +116,16 @@ namespace Decisions___Destiny
 				return;
 			}
 
-			RunMenuLoop(
-				items: scores,
-				itemSelected: score =>
-				{
-					StartLoadedGame(score);
-				},
-				backTitle: "Zurück"
-			);
+			RunMenuLoop(scores, StartLoadedGame, "Zurück");
 		}
 
+		/// <summary>
+		/// Startet ein Spiel aus einem gespeicherten Spielstand.
+		/// </summary>
 		private void StartLoadedGame(string scoreName)
 		{
 			string saveFile = Path.Combine(SelectedGameFolderPath, scoreName, "save.json");
+
 			if (!File.Exists(saveFile))
 			{
 				Printer.PrintError("Spielstand nicht gefunden.");
@@ -121,9 +133,11 @@ namespace Decisions___Destiny
 			}
 
 			Game.Singleton.Start(saveFile);
-			// TODO: Start game loop with loaded data
 		}
 
+		/// <summary>
+		/// Führt eine Menüschleife aus mit beliebigen Einträgen.
+		/// </summary>
 		private void RunMenuLoop(List<string> items, Action<string> itemSelected, string backTitle)
 		{
 			bool inSelection = true;
@@ -133,14 +147,14 @@ namespace Decisions___Destiny
 				Console.Clear();
 
 				var menuItems = items
-					.Select((name, index) =>
-						new MenuItem(index == 0, name, () =>
-						{
-							itemSelected(name);
-							inSelection = false;
-						}))
+					.Select((name, index) => new MenuItem(index == 0, name, () =>
+					{
+						itemSelected(name);
+						inSelection = false;
+					}))
 					.ToList();
 
+				// Option "Zurück"
 				menuItems.Add(new MenuItem(false, backTitle, () => inSelection = false));
 
 				MainMenu = new Menu(menuItems);
@@ -149,9 +163,15 @@ namespace Decisions___Destiny
 			}
 		}
 
+		/// <summary>
+		/// Holt Verzeichnisnamen aus einem Pfad.
+		/// </summary>
 		private List<string> GetDirectories(string path) =>
 			Directory.Exists(path)
-				? Directory.GetDirectories(path).Select(Path.GetFileName).Where(name => !string.IsNullOrEmpty(name)).ToList()!
+				? Directory.GetDirectories(path)
+					.Select(Path.GetFileName)
+					.Where(name => !string.IsNullOrEmpty(name))
+					.ToList()
 				: new List<string>();
 	}
 }

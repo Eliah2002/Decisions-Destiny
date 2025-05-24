@@ -1,57 +1,84 @@
-﻿using Decisions___Destiny;
-using Decisions___Destiny.Models;
-using System.Text.Json;
+﻿using Decisions___Destiny.Helpers;
 
-public class MenuItem
+namespace Decisions___Destiny.Models
 {
-	internal bool IsSafeMenuItem { get; set; } = false;
-	internal bool Selected { get; set; }
-	internal string? Title { get; set; }
-	internal Action? Action { get; set; }
-
-	public MenuItem(bool selected, string title, Action action)
+	/// <summary>
+	/// Repräsentiert einen einzelnen Menüeintrag.
+	/// </summary>
+	public class MenuItem
 	{
-		Selected = selected;
-		Title = title;
-		Action = action;
-	}
+		/// <summary>
+		/// True, wenn es sich um ein spezielles Menüelement handelt, z. B. zum Speichern oder für Escape-Verhalten.
+		/// </summary>
+		internal bool IsSafeMenuItem { get; set; } = false;
 
-	public MenuItem(bool isSafeMenuItem)
-	{
-		IsSafeMenuItem = true;
+		internal bool Selected { get; set; }
 
-		Action = ShowSaveMenu;
-	}
+		internal string? Title { get; set; }
 
-	private void ShowSaveMenu()
-	{
-		bool inSelection = true;
+		/// <summary>
+		/// Die auszuführende Aktion, wenn der Eintrag ausgewählt wird.
+		/// </summary>
+		internal Action? Action { get; set; }
 
-		while (inSelection)
+		public MenuItem(bool selected, string title, Action action)
 		{
-			Console.Clear();
+			Selected = selected;
+			Title = title;
+			Action = action;
+		}
 
-			var menuItems = new List<MenuItem>()
+		/// <summary>
+		/// Erstellt ein spezielles „Save“-Menüelement, das ein Untermenü aufruft.
+		/// </summary>
+		public MenuItem(bool isSafeMenuItem)
+		{
+			IsSafeMenuItem = isSafeMenuItem;
+			Action = ShowSaveMenu;
+		}
+
+		/// <summary>
+		/// Zeigt ein Untermenü zum Speichern an.
+		/// </summary>
+		private void ShowSaveMenu()
+		{
+			bool inSelection = true;
+
+			while (inSelection)
 			{
-				new MenuItem(true, "Speichern", () => { inSelection = false; Save(true); }),
-				new MenuItem(false, "Nicht Speichern", () => { inSelection = false; Save(false); }),
-				new MenuItem(false, "Zurück", () => inSelection = false)
-			};
-			var MainMenu = new Menu(menuItems);
-			var selected = MainMenu.Run();
-			selected.Action?.Invoke();
-		}
-	}
+				Console.Clear();
 
-	private void Save(bool save)
-	{
-		if (save)
-		{
-			//TODO speicherstand benennen lassen
-			string jsonSaveString = JsonSerializer.Serialize(Game.Singleton, new JsonSerializerOptions { WriteIndented = true });
-			string path = Path.Combine(DecisionsAndDestiny.Singleton.SelectedGameFolderPath, "GespeicherteSpiele", "Spielstand 1.json");
-			File.WriteAllText(path, jsonSaveString);
+				var menuItems = new List<MenuItem>()
+				{
+					new MenuItem(true,  "Speichern",        () => { inSelection = false; Save(true); }),
+					new MenuItem(false, "Nicht speichern",  () => { inSelection = false; Save(false); }),
+					new MenuItem(false, "Zurück",           () => inSelection = false)
+				};
+
+				var saveMenu = new Menu(menuItems);
+				var selected = saveMenu.Run();
+				selected.Action?.Invoke();
+			}
 		}
-		DecisionsAndDestiny.Singleton.Start();
+
+		/// <summary>
+		/// Speichert das Spiel (optional) und startet das Hauptmenü neu.
+		/// </summary>
+		private void Save(bool save)
+		{
+			if (save)
+			{
+				Console.Write("Gib einen Namen für den Spielstand ein: ");
+				string? saveName = Console.ReadLine();
+
+				if (string.IsNullOrWhiteSpace(saveName))
+					saveName = "StandardSpielstand";
+
+				SaveSystem.SaveGame(Game.Singleton, saveName);
+			}
+
+			// Zurück zum Startmenü
+			DecisionsAndDestiny.Singleton.Start();
+		}
 	}
 }

@@ -1,46 +1,72 @@
-﻿namespace Decisions___Destiny.Models
+﻿using Decisions___Destiny.Enums;
+
+namespace Decisions___Destiny.Models
 {
+	/// <summary>
+	/// Repräsentiert eine Szene im Spiel, inklusive Beschreibungstext und auswählbaren Entscheidungen.
+	/// </summary>
 	public class Scene
 	{
-		public string ID { get; set; } = String.Empty;
-		public string Text { get; set; } = String.Empty;
+		public string ID { get; set; } = string.Empty;
+
+		public string Text { get; set; } = string.Empty;
+
+		// Liste möglicher Entscheidungen, die von dieser Szene aus getroffen werden können.
 		public List<Choice> Choices { get; set; } = new();
 
-		public bool StartScene(Game game)
+		/// <summary>
+		/// Führt die Szene aus, zeigt Optionen an und verarbeitet Spielerentscheidung.
+		/// </summary>
+		/// <param name="game">Aktuelles Spielobjekt.</param>
+		/// <returns>Gibt zurück, wie es mit dem Spiel weitergeht.</returns>
+		public SceneResult StartScene(Game game)
 		{
-			List<MenuItem> choiceItems = new List<MenuItem>();
-			for (int i = 0; i < Choices.Count; i++)
-			{
-				var choice = Choices[i];
+			List<MenuItem> choiceItems = new();
 
-				if (choice.RequiredFlags.All(flag => game.Flags.Contains(flag)))
+			// Für jede Entscheidung prüfen, ob alle nötigen Flags erfüllt sind
+			foreach (var choice in Choices)
+			{
+				bool isAvailable = choice.RequiredFlags.All(flag => game.Flags.Contains(flag));
+
+				if (isAvailable)
 				{
-					bool isFirst = choiceItems.Count == 0;
-					choiceItems.Add(new MenuItem(isFirst, choice.Text, () =>
+					bool isFirstSelectable = choiceItems.Count == 0;
+
+					choiceItems.Add(new MenuItem(isFirstSelectable, choice.Text, () =>
 					{
+						// Neue Flags setzen
 						foreach (var flag in choice.SetFlags)
 						{
 							game.Flags.Add(flag);
 						}
 
+						// Szene wechseln
 						game.CurrentSceneID = choice.NextSceneID;
 					}));
 				}
 			}
-			choiceItems.Add(new MenuItem(true));
 
-			if (choiceItems.Count == 0)
+			// Option für das Speichern / Zurück zum Hauptmenü hinzufügen
+			choiceItems.Add(new MenuItem(isSafeMenuItem: true));
+
+			// Falls keine Auswahl möglich ist – Spiel beenden
+			if (choiceItems.Count == 1) // nur der Save-Button wurde hinzugefügt
 			{
-				choiceItems.Add(new MenuItem(true, "Kein gültiger Pfad... (Spielende)", () => Environment.Exit(0)));
+				choiceItems.Add(new MenuItem(false, "Kein gültiger Pfad... (Spielende)", () =>
+				{
+					Environment.Exit(0);
+				}));
 			}
 
-			Menu choiceMenu = new Menu(choiceItems);
-			MenuItem selected = choiceMenu.RunScene(Text);
-			selected.Action();
-			if (selected.IsSafeMenuItem)
-				return true;
-			else
-				return false;
+			// Menü anzeigen
+			var menu = new Menu(choiceItems);
+			var selected = menu.RunScene(Text);
+
+			// Aktion der Auswahl ausführen
+			selected.Action?.Invoke();
+
+			// Rückgabewert basierend auf Auswahl
+			return selected.IsSafeMenuItem ? SceneResult.ExitToMainMenu : SceneResult.Continue;
 		}
 	}
 }
