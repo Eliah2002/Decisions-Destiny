@@ -25,19 +25,37 @@ namespace Decisions___Destiny.Models
 		/// <summary>
 		/// Startet das Spiel, lädt Szenen aus einer JSON-Datei und beginnt die erste Szene.
 		/// </summary>
-		public void Start(string jsonPath, string? currentSceneID = null)
+		public void Start(string chapterPath, string? currentSceneID = null)
 		{
 			Console.Clear();
 
 			// JSON-Datei lesen und deserialisieren
-			string jsonContent = File.ReadAllText(jsonPath);
-			List<Scene>? sceneList = JsonSerializer.Deserialize<List<Scene>>(jsonContent);
+			//ELIAH
+			var chapters = Directory.GetFiles(chapterPath, "*.json");
+
+			List<Scene>? sceneList = new List<Scene>();
+			foreach (var chapter in chapters)
+			{
+				string jsonContent = File.ReadAllText(chapter);
+				var ttt = JsonSerializer.Deserialize<List<Scene>>(jsonContent);
+				sceneList.AddRange(JsonSerializer.Deserialize<List<Scene>>(jsonContent));
+			}
 
 			// In ein Dictionary umwandeln (für schnellen Zugriff per ID)
 			Scenes = sceneList.ToDictionary(s => s.ID, s => s);
 
 			// Startszene festlegen (erste in der Liste)
-			CurrentSceneID = string.IsNullOrEmpty(currentSceneID) ? sceneList.First().ID : currentSceneID;
+			if(string.IsNullOrEmpty(currentSceneID))
+			{
+				var firstScene = sceneList.FirstOrDefault(scene => scene.ID.Equals("start", StringComparison.OrdinalIgnoreCase))
+					 ?? sceneList.FirstOrDefault();
+
+				CurrentSceneID = firstScene.ID;
+			}
+			else
+			{
+				CurrentSceneID = currentSceneID;
+			}
 
 			// Spiel ausführen
 			Run();

@@ -33,7 +33,7 @@ namespace Decisions___Destiny
 		internal string SelectedGameFolderPath => Path.Combine(baseJSONPath, SelectedGameName);
 
 		// Absoluter Pfad zur json-Datei des aktuell gewählten Spielverzeichnis
-		internal string SelectedGameJSONPath => Path.Combine(SelectedGameFolderPath, "Chapters", $"{SelectedGameName}.json");
+		internal string SelectedGameChapterFolderPath => Path.Combine(SelectedGameFolderPath, "Chapters");
 
 		// Absoluter Pfad zu den Spielständen des aktuell gewählten Spielverzeichnis
 		internal string SelectedGameScoresFolderPath => Path.Combine(SelectedGameFolderPath, "Saves");
@@ -122,13 +122,13 @@ namespace Decisions___Destiny
 		/// </summary>
 		private void StartNewGame()
 		{
-			if (!File.Exists(SelectedGameJSONPath))
+			if (!Directory.Exists(SelectedGameChapterFolderPath))
 			{
-				Printer.PrintError("Spieldatei nicht gefunden.");
+				Printer.PrintError("Keine Spieldateien gefunden.");
 				return;
 			}
 
-			Game.Singleton.Start(SelectedGameJSONPath);
+			Game.Singleton.Start(SelectedGameChapterFolderPath);
 		}
 
 		/// <summary>
@@ -168,7 +168,7 @@ namespace Decisions___Destiny
 			}
 
 			SaveSystem.LoadGame(Game.Singleton, saveFile);
-			Game.Singleton.Start(SelectedGameJSONPath, Game.Singleton.CurrentSceneID);
+			Game.Singleton.Start(SelectedGameChapterFolderPath, Game.Singleton.CurrentSceneID);
 		}
 
 		/// <summary>
