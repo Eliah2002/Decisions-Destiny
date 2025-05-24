@@ -60,13 +60,26 @@ namespace Decisions___Destiny
 			while (programIsRunning)
 			{
 				Console.Clear();
-				MainMenu = new Menu(new List<MenuItem>
-				{
-					new MenuItem(true, "Neues Spiel starten", () => ShowGameSelection(StartNewGame)),
-					new MenuItem(false, "Spiel laden", () => ShowGameSelection(StartLoadedGame)),
-					new MenuItem(false, "Beenden", () => programIsRunning = false)
-				});
 
+				var gameFolders = GetDirectories(baseJSONPath);
+				if (gameFolders.Count == 0)
+				{
+					Printer.PrintError("Keine Spiele gefunden.");
+					return;
+				}
+
+				var menuItems = gameFolders
+					.Select((gameName, index) =>
+						new MenuItem(index == 0, gameName, () =>
+						{
+							SelectedGameName = gameName;
+							ShowGameOptions();
+						}))
+					.ToList();
+
+				menuItems.Add(new MenuItem(false, "Beenden", () => programIsRunning = false));
+
+				MainMenu = new Menu(menuItems);
 				var selected = MainMenu.Run();
 				selected.Action?.Invoke();
 			}
@@ -75,22 +88,37 @@ namespace Decisions___Destiny
 		/// <summary>
 		/// Zeigt verfügbaren Spieleordner zur Auswahl an.
 		/// </summary>
-		private void ShowGameSelection(Action onGameSelected)
+		private void ShowGameOptions()
 		{
-			var games = GetDirectories(baseJSONPath);
+			bool inSubMenu = true;
 
-			if (games.Count == 0)
+			while (inSubMenu)
 			{
-				Printer.PrintError("Keine Spiele gefunden!");
-				return;
+				Console.Clear();
+				var menuItems = new List<MenuItem>
+				{
+					new MenuItem(true, "Neues Spiel starten", () =>
+					{
+						inSubMenu = false;
+						StartNewGame();
+					}),
+					new MenuItem(false, "Spiel laden", () =>
+					{
+						inSubMenu = false;
+						StartLoadedGame();
+					}),
+					new MenuItem(false, "Zurück", () =>
+					{
+						inSubMenu = false;
+					})
+				};
+
+				var subMenu = new Menu(menuItems);
+				var selected = subMenu.Run();
+				selected.Action?.Invoke();
 			}
-
-			RunMenuLoop(games, name =>
-			{
-				SelectedGameName = name;
-				onGameSelected();
-			}, "Zurück");
 		}
+
 
 		/// <summary>
 		/// Startet ein neues Spiel durch Laden der Hauptspiel-JSON.
